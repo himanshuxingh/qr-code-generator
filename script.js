@@ -1,19 +1,21 @@
 function genQR() {
-    var goapi = "https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=";
+    var goapi = "https://api.qrserver.com/v1/create-qr-code/?size=";
     var myimg = document.getElementById("img");
     var mytext = document.getElementById("qrtext").value;
     var mysize = document.getElementById("size").value;
 
     if (mytext !== "") {
-        var qrDataURL = goapi + mysize + "x" + mysize + "&chl=" + encodeURIComponent(mytext);
+        // Update the API URL and parameters
+        var qrDataURL = goapi + mysize + "x" + mysize + "&data=" + encodeURIComponent(mytext);
         myimg.src = qrDataURL;
-        
-        // Convert the data URL to a blob and create an anchor element for download
+
+        // Fetch the image for download link setup
         fetch(qrDataURL)
             .then(response => response.blob())
             .then(blob => {
                 var downloadLink = document.getElementById("download");
                 downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.download = "qrcode.png"; // Set a filename for download
                 downloadLink.style.display = "block";
             })
             .catch(error => {
